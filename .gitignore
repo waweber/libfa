@@ -1,0 +1,6 @@
+/ve
+/build
+/dist
+/libfa.egg-info
+*.py[co]
+__pycache__
