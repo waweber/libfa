@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 requirements = [
         "requests",
-        "beautifulsoup4",
-        "html5lib",
+        "lxml",
+        "cssselect",
         ]
 
 setup(

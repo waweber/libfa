@@ -2,7 +2,8 @@
 """
 
 import requests
-from bs4 import BeautifulSoup
+from lxml import etree
+from io import StringIO
 
 class RequestProcessor:
     def process_request(self, request, session):
@@ -45,7 +46,8 @@ class Session:
             proc.process_response(response, self)
 
         # Parse response
-        bs = BeautifulSoup(response.text, "html5lib")
+        parser = etree.HTMLParser()
+        data = etree.parse(StringIO(response.text), parser)
 
-        return bs
+        return data
 
