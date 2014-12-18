@@ -2,6 +2,7 @@
 """
 
 import requests
+from bs4 import BeautifulSoup
 
 class RequestProcessor:
     def process_request(self, request, session):
@@ -43,5 +44,8 @@ class Session:
         for proc in reversed(self.request_processors):
             proc.process_response(response, self)
 
-        # Return final response
-        return response
+        # Parse response
+        bs = BeautifulSoup(response.text, "html5lib")
+
+        return bs
+
