@@ -3,7 +3,7 @@
 
 import requests
 
-class IRequestProcessor:
+class RequestProcessor:
     def process_request(self, request, session):
         pass
 
@@ -11,11 +11,13 @@ class IRequestProcessor:
         pass
 
 class Session:
+    base_url = None
     requests_session = None
     request_processors = []
 
-    def __init__(self):
+    def __init__(self, base_url="https://www.furaffinity.net"):
         self.requests_session = requests.Session()
+        self.base_url = base_url
 
     def add_request_processor(self, proc):
         self.request_processors.append(proc)
@@ -25,15 +27,16 @@ class Session:
 
     def perform_request(self, method, url, params=None, data=None):
         # Prepare a request object
-        req = requests.Request(method, url, params=params,
-                data=data)
+        req = requests.Request(method, self.base_url + url, params=params,
+                data=data, cookies={})
 
         # Allow each processor to mutate the request
         for proc in self.request_processors:
             proc.process_request(req, self)
 
-        # Send the request
         prepared_request = self.get_requests_session().prepare_request(req)
+
+        # Send the request
         response = self.get_requests_session().send(prepared_request)
 
         # Allow each processor to mutate the response
