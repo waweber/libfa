@@ -6,37 +6,34 @@ from lxml import etree
 import datetime
 import re
 from . import rating
+from . import user
 
 class Submission:
     id = None
-    author_user_name = None
-    author_display_name = None
+    author = None # User object
     title = None
     date = None
     media_url = None
     text = None
 
-    favorites = None
-    comments = None
-    views = None
+    num_favorites = None
+    num_comments = None
+    num_views = None
 
     rating = None
 
 
-def get_submission(session, submission_id):
-    url = "/view/%s/" % (submission_id)
+def get_submission_by_id(session, submission_id):
+    url = "/view/%s/" % submission_id
     page = session.perform_request("GET", url)
 
     sub = Submission()
     sub.id = submission_id
 
     # Title
-    selector = CSSSelector("table.maintable:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > b:nth-child(1)")
+    selector = CSSSelector("""table.maintable:nth-child(1) > tr:nth-child(1) >
+    td:nth-child(1) > b:nth-child(1)""")
     sub.title = selector(page)[0].text
-
-    # Author
-    selector = CSSSelector("table.maintable:nth-child(6) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(2)")
-    sub.author_display_name = selector(page)[0].text
 
     # Media url
     # This one's hacky
@@ -56,21 +53,22 @@ def get_submission(session, submission_id):
     selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(1) >
     td:nth-child(2) > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) >
     b:nth-child(14)""")
-    sub.favorites = int(selector(page)[0].tail)
+    sub.num_favorites = int(selector(page)[0].tail)
 
     # Comments
     selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(1) >
     td:nth-child(2) > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) >
     b:nth-child(16)""")
-    sub.comments = int(selector(page)[0].tail)
+    sub.num_comments = int(selector(page)[0].tail)
 
     # Views
     selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(1) >
     td:nth-child(2) > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) >
     b:nth-child(18)""")
-    sub.views = int(selector(page)[0].tail)
+    sub.num_views = int(selector(page)[0].tail)
 
     # Text
+    # TODO: parse out html
     selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(2) >
     td:nth-child(1)""")
     text_element = selector(page)[0]
@@ -92,5 +90,8 @@ def get_submission(session, submission_id):
         sub.rating = rating.MATURE
     elif "Adult" in rating_str:
         sub.rating = rating.ADULT
+
+    # Parse user
+    sub.author = user.parse_from_submission_page(page)
 
     return sub

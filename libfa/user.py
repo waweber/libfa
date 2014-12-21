@@ -34,3 +34,21 @@ def get_by_login_name(session, login_name):
 
     return user
 
+def parse_from_submission_page(page):
+    user = User()
+
+    # user name
+    selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(1) >
+    td:nth-child(1) > a:nth-child(2)""")
+    user.user_name = selector(page)[0].text
+
+    # login name
+    user.login_name = user_name_to_login_name(user.user_name)
+
+    # Icon
+    selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(2) >
+    td:nth-child(1) > a:nth-child(1) > img:nth-child(1)""")
+    user.icon_url = selector(page)[0].get("src")
+
+    return user
+
