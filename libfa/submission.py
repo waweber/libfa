@@ -23,9 +23,10 @@ class Submission:
 
     rating = None
 
+    tags = []
     comments = []
 
-def get_submission_by_id(session, submission_id):
+def get_by_id(session, submission_id):
     url = "/view/%s/" % submission_id
     page = session.perform_request("GET", url)
 
@@ -92,6 +93,11 @@ def get_submission_by_id(session, submission_id):
         sub.rating = rating.MATURE
     elif "Adult" in rating_str:
         sub.rating = rating.ADULT
+
+    # Parse tags
+    selector = CSSSelector("#keywords > a")
+    for e in selector(page):
+        sub.tags.append(e.text.lower())
 
     # Parse user
     sub.author = user.parse_from_submission_page(page)
