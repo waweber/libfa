@@ -48,3 +48,6 @@ def get_gallery_by_login_name(session, login_name, page=1):
 
 def get_scraps_by_login_name(session, login_name, page=1):
     return get_by_login_name(session, login_name, "scraps", page)
+
+def get_favorites_by_login_name(session, login_name, page=1):
+    return get_by_login_name(session, login_name, "favorites", page)
