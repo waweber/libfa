@@ -84,7 +84,7 @@ def get_submission_by_id(session, submission_id):
     # Get rating
     selector = CSSSelector("""table.maintable:nth-child(6) > tr:nth-child(1) >
     td:nth-child(2) > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) >
-    div:nth-child(26) > img:nth-child(1)""")
+    div > img:nth-child(1)""")
     rating_str = selector(page)[0].get("alt")
     if "General" in rating_str:
         sub.rating = rating.GENERAL
