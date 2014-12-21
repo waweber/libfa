@@ -4,29 +4,33 @@
 from lxml.cssselect import CSSSelector
 
 class User:
+    login_name = None
     user_name = None
-    display_name = None
-    full_name = None
     icon_url = None
 
-def get_user_info(session, user_name):
-    url = "/user/%s/" % (user_name)
+def user_name_to_login_name(user_name):
+    login_name = user_name.replace("_", "").lower()
+    return login_name
+
+def get_by_login_name(session, login_name):
+    url = "/user/%s/" % login_name
 
     page = session.perform_request("GET", url)
 
     user = User()
-    user.user_name = user_name
+    user.login_name = login_name
 
-    # Search for display_name
+    # User name
     selector = CSSSelector("td.lead:nth-child(2) > b:nth-child(1)")
-    user.display_name = selector(page)[0].text[1:]
-
-    # Full name
-    selector = CSSSelector("td.ldot:nth-child(1)")
-    user.full_name = selector(page)[0][0].tail.strip()
+    user.user_name = selector(page)[0].text[1:]
 
     # Icon
-    selector = CSSSelector("img[alt=\"Avatar [ %s ]\"]" % user_name)
+    selector = CSSSelector(""".innertable > td:nth-child(1) > table:nth-child(1)
+    > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tr:nth-child(1) >
+    td:nth-child(1) > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) >
+    table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1)
+    > tr:nth-child(1) > td:nth-child(2) > a:nth-child(1) > img:nth-child(1)""")
     user.icon_url = selector(page)[0].get("src")
 
     return user
+
