@@ -7,6 +7,7 @@ import datetime
 import re
 from . import rating
 from . import user
+from . import comment
 
 class Submission:
     id = None
@@ -22,6 +23,7 @@ class Submission:
 
     rating = None
 
+    comments = []
 
 def get_submission_by_id(session, submission_id):
     url = "/view/%s/" % submission_id
@@ -73,7 +75,7 @@ def get_submission_by_id(session, submission_id):
     td:nth-child(1)""")
     text_element = selector(page)[0]
 
-    text_str = ""
+    text_str = text_element.text
     for e in text_element[3:]:
         text_str += etree.tostring(e, with_tail=True)
 
@@ -93,5 +95,8 @@ def get_submission_by_id(session, submission_id):
 
     # Parse user
     sub.author = user.parse_from_submission_page(page)
+
+    # Parse comments
+    sub.comments = comment.parse_all_from_submission_page(page)
 
     return sub

@@ -52,3 +52,20 @@ def parse_from_submission_page(page):
 
     return user
 
+def parse_from_comment(comment):
+    user = User()
+
+    # User name
+    selector = CSSSelector("""tr:nth-child(1) > td:nth-child(3) >
+    div:nth-child(1) > ul:nth-child(1) > li:nth-child(1) > b:nth-child(1)""")
+    user.user_name = selector(comment)[0].text
+
+    # login name
+    user.login_name = user_name_to_login_name(user.user_name)
+
+    # Icon
+    selector = CSSSelector("""tr:nth-child(1) > td:nth-child(2) > a:nth-child(1)
+    > img:nth-child(1)""")
+    user.icon_url = selector(comment)[0].get("src")
+
+    return user
