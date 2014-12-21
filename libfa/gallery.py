@@ -9,8 +9,8 @@ class GalleryItem:
     preview_url = None
     title = None
 
-def get_by_login_name(session, login_name, page=1):
-    url = "/gallery/%s/%d/" % (login_name, page)
+def get_by_login_name(session, login_name, gallery_type, page=1):
+    url = "/%s/%s/%d/" % (gallery_type, login_name, page)
     data = {
             "perpage": 60,
             "btn": "Next",
@@ -43,3 +43,8 @@ def get_by_login_name(session, login_name, page=1):
 
     return items
 
+def get_gallery_by_login_name(session, login_name, page=1):
+    return get_by_login_name(session, login_name, "gallery", page)
+
+def get_scraps_by_login_name(session, login_name, page=1):
+    return get_by_login_name(session, login_name, "scraps", page)
