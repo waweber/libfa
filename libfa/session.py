@@ -3,7 +3,9 @@
 
 import requests
 from lxml import etree
+from lxml.cssselect import CSSSelector
 from io import StringIO
+from . import exception
 
 class RequestProcessor:
     def process_request(self, request, session):
@@ -62,6 +64,16 @@ class Session:
                 }
 
         page = self.perform_request("POST", "/login/", data=data)
+
+        selector = CSSSelector(""".innertable > td:nth-child(1) >
+        table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) >
+        form:nth-child(2) > table:nth-child(3) > tr:nth-child(2) >
+        td:nth-child(1)""")
+        err_element = selector(page)
+
+        if len(err_element) != 0:
+            raise exception.LoginFailure()
+
 
     def logout(self):
         self.perform_request("GET", "/logout/")
