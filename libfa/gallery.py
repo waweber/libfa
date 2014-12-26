@@ -2,6 +2,7 @@
 """
 
 from lxml.cssselect import CSSSelector
+from .exception import parse_check
 
 class GalleryItem:
     id = None
@@ -9,6 +10,7 @@ class GalleryItem:
     preview_url = None
     title = None
 
+@parse_check
 def get_by_login_name(session, login_name, gallery_type, page=1):
     url = "/%s/%s/%d/" % (gallery_type, login_name, page)
     data = {

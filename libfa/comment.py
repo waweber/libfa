@@ -4,6 +4,7 @@
 from lxml.cssselect import CSSSelector
 from lxml import etree
 from . import user
+from .exception import parse_check
 import datetime
 
 class Comment:
@@ -13,6 +14,7 @@ class Comment:
     title = None
     text = None
 
+@parse_check
 def parse_all_from_submission_page(page):
     selector = CSSSelector("table.container-comment")
     comment_elements = selector(page)

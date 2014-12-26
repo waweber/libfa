@@ -8,6 +8,7 @@ import re
 from . import rating
 from . import user
 from . import comment
+from .exception import parse_check
 
 class Submission:
     id = None
@@ -26,6 +27,7 @@ class Submission:
     tags = []
     comments = []
 
+@parse_check
 def get_by_id(session, submission_id):
     url = "/view/%s/" % submission_id
     page = session.perform_request("GET", url)

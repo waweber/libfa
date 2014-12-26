@@ -2,12 +2,14 @@
 """
 
 from lxml.cssselect import CSSSelector
+from .exception import parse_check
 import re
 
 class Profile:
     full_name = None
     watch_key = None
 
+@parse_check
 def get_by_login_name(session, login_name):
     url = "/user/%s/" % login_name
 

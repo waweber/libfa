@@ -2,6 +2,7 @@
 """
 
 from lxml.cssselect import CSSSelector
+from .exception import parse_check
 
 class User:
     login_name = None
@@ -12,6 +13,7 @@ def user_name_to_login_name(user_name):
     login_name = user_name.replace("_", "").lower()
     return login_name
 
+@parse_check
 def get_by_login_name(session, login_name):
     url = "/user/%s/" % login_name
 
@@ -34,6 +36,7 @@ def get_by_login_name(session, login_name):
 
     return user
 
+@parse_check
 def parse_from_submission_page(page):
     user = User()
 
@@ -52,6 +55,7 @@ def parse_from_submission_page(page):
 
     return user
 
+@parse_check
 def parse_from_comment(comment):
     user = User()
 

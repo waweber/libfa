@@ -27,10 +27,11 @@ class Session:
     def get_requests_session(self):
         return self.requests_session
 
-    def perform_request(self, method, url, params=None, data=None):
+    def perform_request(self, method, url, params=None, data=None,
+            headers=None):
         # Prepare a request object
         req = requests.Request(method, self.base_url + url, params=params,
-                data=data, cookies={})
+                data=data, cookies={}, headers=headers)
 
         # Allow each processor to mutate the request
         for proc in self.request_processors:
@@ -51,3 +52,16 @@ class Session:
 
         return data
 
+    def login(self, login_name, password):
+        data = {
+                "action": "login",
+                "retard_protection": "1", # classy
+                "name": login_name,
+                "pass": password,
+                "login": "",
+                }
+
+        page = self.perform_request("POST", "/login/", data=data)
+
+    def logout(self):
+        self.perform_request("GET", "/logout/")
