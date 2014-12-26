@@ -3,6 +3,7 @@
 
 from lxml.cssselect import CSSSelector
 from .exception import parse_check
+from . import exception
 
 class User:
     login_name = None
@@ -18,6 +19,13 @@ def get_by_login_name(session, login_name):
     url = "/user/%s/" % login_name
 
     page = session.perform_request("GET", url)
+
+    # Success test
+    selector = CSSSelector(".alt1 > font:nth-child(1)")
+    error_element = selector(page)
+    if len(error_element) != 0:
+        if re.search("cannot be found", error_element[0].text) != None:
+            raise exception.NotFound(User, login_name)
 
     user = User()
     user.login_name = login_name

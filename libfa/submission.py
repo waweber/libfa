@@ -9,6 +9,7 @@ from . import rating
 from . import user
 from . import comment
 from .exception import parse_check
+from . import exception
 
 class Submission:
     id = None
@@ -31,6 +32,13 @@ class Submission:
 def get_by_id(session, submission_id):
     url = "/view/%s/" % submission_id
     page = session.perform_request("GET", url)
+
+    # Success test
+    selector = CSSSelector(".alt1 > font:nth-child(1)")
+    error_element = selector(page)
+    if len(error_element) != 0:
+        if re.search("not in our database", error_element[0].text) != None:
+            raise exception.NotFound(Submission, submission_id)
 
     sub = Submission()
     sub.id = submission_id

@@ -3,6 +3,8 @@
 
 from lxml.cssselect import CSSSelector
 from .exception import parse_check
+from . import exception
+import re
 
 class GalleryItem:
     id = None
@@ -18,6 +20,13 @@ def get_by_login_name(session, login_name, gallery_type, page=1):
             "btn": "Next",
             }
     page = session.perform_request("POST", url, data=data)
+
+    # Success test
+    selector = CSSSelector(".alt1 > b:nth-child(2)")
+    error_element = selector(page)
+    if len(error_element) != 0:
+        if re.search("could not be found", error_element[0].text) != None:
+            raise exception.NotFound(GalleryItem, login_name)
 
     # Find items
     selector = CSSSelector(".flow > b")

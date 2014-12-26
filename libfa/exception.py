@@ -7,6 +7,11 @@ class LoginFailure(Exception):
 class ParseError(Exception):
     pass
 
+class NotFound(Exception):
+    def __init__(self, what, which):
+        self.what = what
+        self.which = which
+
 def parse_check(f):
     def wrapped_func(*args, **kwargs):
         try:
