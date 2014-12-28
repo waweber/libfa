@@ -7,14 +7,14 @@ from lxml.cssselect import CSSSelector
 from io import StringIO
 from . import exception
 
-class RequestProcessor:
+class RequestProcessor(object):
     def process_request(self, request, session):
         pass
 
     def process_response(self, response, session):
         pass
 
-class Session:
+class Session(object):
     base_url = None
     requests_session = None
     request_processors = []

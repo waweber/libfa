@@ -11,7 +11,7 @@ from . import comment
 from .exception import parse_check
 from . import exception
 
-class Submission:
+class Submission(object):
     id = None
     author = None # User object
     title = None

@@ -1,7 +1,9 @@
 """Assumes an existing session
 """
 
-class SessionProcessor:
+from ..session import RequestProcessor
+
+class SessionProcessor(RequestProcessor):
     def __init__(self, a, b):
         self.a = a
         self.b = b

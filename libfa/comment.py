@@ -7,7 +7,7 @@ from . import user
 from .exception import parse_check
 import datetime
 
-class Comment:
+class Comment(object):
     id = None
     author = None
     date = None

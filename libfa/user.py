@@ -5,7 +5,7 @@ from lxml.cssselect import CSSSelector
 from .exception import parse_check
 from . import exception
 
-class User:
+class User(object):
     login_name = None
     user_name = None
     icon_url = None

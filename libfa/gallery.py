@@ -6,7 +6,7 @@ from .exception import parse_check
 from . import exception
 import re
 
-class GalleryItem:
+class GalleryItem(object):
     id = None
     login_name = None
     preview_url = None

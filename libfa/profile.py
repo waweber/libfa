@@ -6,7 +6,7 @@ from .exception import parse_check
 from . import exception
 import re
 
-class Profile:
+class Profile(object):
     user_id = None
     full_name = None
     watch_key = None
